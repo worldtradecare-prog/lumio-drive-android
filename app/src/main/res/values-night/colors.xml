@@ -17,7 +17,9 @@
     <!-- Colors -->
     <color name="dark">#ffffff</color>
     <color name="bg_default">#121212</color>
-    <color name="media_placeholder_background">#2C2C2C</color>
+    <color name="media_placeholder_background">#1E3A8A</color>
+    <color name="lumio_skeleton">#2563EB</color>
+    <color name="lumio_brand">#2563EB</color>
     <color name="primary_button_text_color">#000000</color>
     <color name="grey_200">#818181</color>
     <color name="nc_grey">#222222</color>

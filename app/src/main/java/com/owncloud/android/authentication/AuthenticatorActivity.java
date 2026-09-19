@@ -59,6 +59,7 @@ import com.nextcloud.client.account.UserAccountManager;
 import com.nextcloud.client.device.DeviceInfo;
 import com.nextcloud.client.di.Injectable;
 import com.nextcloud.client.network.ClientFactory;
+import com.nextcloud.client.lumio.LumioLoginActivity;
 import com.nextcloud.client.onboarding.FirstRunActivity;
 import com.nextcloud.client.onboarding.OnboardingService;
 import com.nextcloud.client.preferences.AppPreferences;
@@ -255,6 +256,22 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Branded fork: never show stock server-URL setup. Forward to Lumio login.
+        // Subclasses (LumioLoginActivity) skip this.
+        if (getClass() == AuthenticatorActivity.class) {
+            super.onCreate(savedInstanceState);
+            Intent forward = new Intent(this, LumioLoginActivity.class);
+            if (getIntent() != null) {
+                if (getIntent().getExtras() != null) {
+                    forward.putExtras(getIntent().getExtras());
+                }
+                forward.setData(getIntent().getData());
+                forward.setAction(getIntent().getAction());
+            }
+            startActivity(forward);
+            finish();
+            return;
+        }
         super.onCreate(savedInstanceState);
         loginDialog = new LoginDialog(this);
         viewThemeUtils = viewThemeUtilsFactory.withPrimaryAsBackground();
@@ -1524,14 +1541,39 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
         String accountName = AccountUtils.buildAccountName(uri, loginName);
         Account newAccount = new Account(accountName, accountType);
         if (accountManager.exists(newAccount)) {
-            // fail - not a new account, but an existing one; disallow
-            RemoteOperationResult result = new RemoteOperationResult(ResultCode.ACCOUNT_NOT_NEW);
+            // Lumio Drive branded client: refresh password for the existing account and continue
+            // into Files. Stock Nextcloud would abort here (ACCOUNT_NOT_NEW), which closed the app
+            // after a successful re-login.
+            UserInfo existingUserInfo = authResult.getResultData();
+            mAccount = newAccount;
+            mAccountMgr.setPassword(mAccount, webViewPassword);
+            mAccountMgr.notifyAccountAuthenticated(mAccount);
 
-            updateAuthStatusIconAndText(result);
-            showAuthStatus();
+            try {
+                OwnCloudAccount ocAccount = new OwnCloudAccount(mAccount, this);
+                OwnCloudClientManagerFactory.getDefaultSingleton().removeClientFor(ocAccount);
+            } catch (Exception e) {
+                Log_OC.e(TAG, "Could not clear cached client for existing account", e);
+            }
 
-            Log_OC.d(TAG, result.getLogMessage());
-            return false;
+            if (existingUserInfo != null) {
+                mAccountMgr.setUserData(mAccount, Constants.KEY_DISPLAY_NAME, existingUserInfo.getDisplayName());
+                mAccountMgr.setUserData(mAccount, Constants.KEY_USER_ID, existingUserInfo.getId());
+            }
+            mAccountMgr.setUserData(mAccount, Constants.KEY_OC_BASE_URL, mServerInfo.mBaseUrl);
+            if (mServerInfo.mVersion != null) {
+                mAccountMgr.setUserData(mAccount, Constants.KEY_OC_VERSION, mServerInfo.mVersion.getVersion());
+            }
+
+            final Intent refreshIntent = new Intent();
+            refreshIntent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+            refreshIntent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mAccount.name);
+            refreshIntent.putExtra(AccountManager.KEY_USERDATA, loginName);
+            setAccountAuthenticatorResult(refreshIntent.getExtras());
+            setResult(RESULT_OK, refreshIntent);
+
+            Log_OC.d(TAG, "Existing account refreshed: " + mAccount.name);
+            return true;
 
         } else {
             UserInfo userInfo = authResult.getResultData();

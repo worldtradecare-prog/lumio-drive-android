@@ -8,6 +8,7 @@
  */
 package com.owncloud.android.ui.adapter
 
+import android.graphics.Paint
 import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
@@ -84,6 +85,11 @@ class GalleryRowHolder(
 
     private fun createCell(): FrameLayout {
         val shimmer = LoaderImageView(context).apply {
+            // Lumio Drive: blue (#2563EB) thumbnail loading skeletons
+            val skeletonPaint = Paint().apply {
+                color = ContextCompat.getColor(context, R.color.lumio_skeleton)
+            }
+            setRectColor(skeletonPaint)
             setImageResource(R.drawable.background)
             resetLoader()
             layoutParams = FrameLayout.LayoutParams(0, 0)

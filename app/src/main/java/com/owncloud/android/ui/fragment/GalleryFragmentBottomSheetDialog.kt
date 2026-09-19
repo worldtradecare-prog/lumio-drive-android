@@ -63,6 +63,7 @@ class GalleryFragmentBottomSheetDialog :
 
         listOf(
             binding.btnSelectMediaFolder,
+            binding.btnLibraryByYear,
             binding.btnHideVideos,
             binding.btnHideImages
         ).forEach {
@@ -108,6 +109,10 @@ class GalleryFragmentBottomSheetDialog :
         }
         binding.btnSelectMediaFolder.setOnClickListener {
             actions?.selectMediaFolder()
+            dismiss()
+        }
+        binding.btnLibraryByYear.setOnClickListener {
+            actions?.showLibraryByYear()
             dismiss()
         }
     }

@@ -27,6 +27,7 @@ import com.nextcloud.client.preferences.AppPreferences
 import com.nextcloud.utils.mdm.MDMConfig
 import com.owncloud.android.BuildConfig
 import com.owncloud.android.R
+import com.nextcloud.client.lumio.LumioLoginActivity
 import com.owncloud.android.authentication.AuthenticatorActivity
 import com.owncloud.android.databinding.FirstRunActivityBinding
 import com.owncloud.android.features.FeatureItem
@@ -146,7 +147,7 @@ class FirstRunActivity :
     }
 
     private fun getAuthenticatorActivityIntent(extraUseProviderAsWebLogin: Boolean): Intent {
-        val intent = Intent(this, AuthenticatorActivity::class.java)
+        val intent = Intent(this, LumioLoginActivity::class.java)
         intent.putExtra(AuthenticatorActivity.EXTRA_USE_PROVIDER_AS_WEBLOGIN, extraUseProviderAsWebLogin)
         return intent
     }
@@ -193,7 +194,7 @@ class FirstRunActivity :
                     val destination: Intent = if (isFromAddAccount) {
                         Intent(applicationContext, FileDisplayActivity::class.java)
                     } else {
-                        Intent(applicationContext, AuthenticatorActivity::class.java)
+                        Intent(applicationContext, LumioLoginActivity::class.java)
                     }
 
                     if (!isFromAddAccount) {

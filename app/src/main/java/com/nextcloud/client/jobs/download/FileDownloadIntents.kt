@@ -10,6 +10,7 @@ package com.nextcloud.client.jobs.download
 import android.content.Context
 import android.content.Intent
 import com.nextcloud.client.account.User
+import com.nextcloud.client.lumio.LumioLoginActivity
 import com.owncloud.android.authentication.AuthenticatorActivity
 import com.owncloud.android.operations.DownloadFileOperation
 import com.owncloud.android.ui.activity.FileActivity
@@ -19,7 +20,7 @@ import com.owncloud.android.ui.preview.PreviewImageFragment
 
 class FileDownloadIntents(private val context: Context) {
 
-    fun credentialContentIntent(user: User): Intent = Intent(context, AuthenticatorActivity::class.java).apply {
+    fun credentialContentIntent(user: User): Intent = Intent(context, LumioLoginActivity::class.java).apply {
         putExtra(AuthenticatorActivity.EXTRA_ACCOUNT, user.toPlatformAccount())
         putExtra(
             AuthenticatorActivity.EXTRA_ACTION,

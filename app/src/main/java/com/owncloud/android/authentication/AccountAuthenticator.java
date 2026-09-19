@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.nextcloud.utils.mdm.MDMConfig;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
+import com.nextcloud.client.lumio.LumioLoginActivity;
 import com.owncloud.android.lib.common.accounts.AccountTypeUtils;
 import com.owncloud.android.lib.common.utils.Log_OC;
 
@@ -80,7 +81,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
                 return e.getFailureBundle();
             }
 
-            Intent intent = new Intent(mContext, AuthenticatorActivity.class);
+            Intent intent = new Intent(mContext, LumioLoginActivity.class);
             intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
             intent.putExtra(KEY_AUTH_TOKEN_TYPE, authTokenType);
             intent.putExtra(KEY_REQUIRED_FEATURES, requiredFeatures);
@@ -115,7 +116,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
             return e.getFailureBundle();
         }
 
-        Intent intent = new Intent(mContext, AuthenticatorActivity.class);
+        Intent intent = new Intent(mContext, LumioLoginActivity.class);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE,
                 response);
         intent.putExtra(KEY_ACCOUNT, account);
@@ -165,7 +166,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
         }
 
         /// if not stored, return Intent to access the AuthenticatorActivity and UPDATE the token for the account
-        Intent intent = new Intent(mContext, AuthenticatorActivity.class);
+        Intent intent = new Intent(mContext, LumioLoginActivity.class);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
         intent.putExtra(KEY_AUTH_TOKEN_TYPE, authTokenType);
         intent.putExtra(KEY_LOGIN_OPTIONS, options);
@@ -195,7 +196,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
     public Bundle updateCredentials(AccountAuthenticatorResponse response,
                                     Account account, String authTokenType, Bundle options) {
 
-        Intent intent = new Intent(mContext, AuthenticatorActivity.class);
+        Intent intent = new Intent(mContext, LumioLoginActivity.class);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
         intent.putExtra(KEY_ACCOUNT, account);
         intent.putExtra(KEY_AUTH_TOKEN_TYPE, authTokenType);

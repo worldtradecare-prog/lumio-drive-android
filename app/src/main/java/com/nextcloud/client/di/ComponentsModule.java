@@ -37,6 +37,8 @@ import com.nextcloud.ui.trashbinFileActions.TrashbinFileActionsBottomSheet;
 import com.nmc.android.ui.LauncherActivity;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.authentication.AuthenticatorActivity;
+import com.nextcloud.client.lumio.LumioLoginActivity;
+import com.nextcloud.client.lumio.LumioLibraryByYearDialog;
 import com.owncloud.android.authentication.DeepLinkLoginActivity;
 import com.owncloud.android.files.BootupBroadcastReceiver;
 import com.owncloud.android.providers.DiskLruImageCacheFileProvider;
@@ -170,6 +172,12 @@ abstract class ComponentsModule {
 
     @ContributesAndroidInjector
     abstract DeepLinkLoginActivity deepLinkLoginActivity();
+
+    @ContributesAndroidInjector
+    abstract LumioLoginActivity lumioLoginActivity();
+
+    @ContributesAndroidInjector
+    abstract LumioLibraryByYearDialog lumioLibraryByYearDialog();
 
     @ContributesAndroidInjector
     abstract DrawerActivity drawerActivity();

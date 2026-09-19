@@ -41,6 +41,7 @@ import com.nextcloud.utils.extensions.getParcelableArgument
 import com.nextcloud.utils.mdm.MDMConfig.multiAccountSupport
 import com.owncloud.android.MainApp
 import com.owncloud.android.R
+import com.nextcloud.client.lumio.LumioLoginActivity
 import com.owncloud.android.authentication.AuthenticatorActivity
 import com.owncloud.android.datamodel.ArbitraryDataProvider
 import com.owncloud.android.datamodel.ArbitraryDataProviderImpl
@@ -167,7 +168,7 @@ class ManageAccountsActivity :
                 resultIntent.putExtra(KEY_CURRENT_ACCOUNT_CHANGED, hasCurrentAccountChanged())
                 setResult(RESULT_OK, resultIntent)
             } else {
-                val intent = Intent(this@ManageAccountsActivity, AuthenticatorActivity::class.java)
+                val intent = Intent(this@ManageAccountsActivity, LumioLoginActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(intent)
             }

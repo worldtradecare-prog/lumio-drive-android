@@ -46,6 +46,7 @@ import com.nextcloud.utils.extensions.IntentExtensionsKt;
 import com.nextcloud.utils.mdm.MDMConfig;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
+import com.nextcloud.client.lumio.LumioLoginActivity
 import com.owncloud.android.authentication.AuthenticatorActivity;
 import com.owncloud.android.datamodel.ArbitraryDataProvider;
 import com.owncloud.android.datamodel.ArbitraryDataProviderImpl;
@@ -492,7 +493,7 @@ public abstract class FileActivity extends DrawerActivity
             }
 
             /// step 2 - request credentials to user
-            Intent updateAccountCredentials = new Intent(context, AuthenticatorActivity.class);
+            Intent updateAccountCredentials = new Intent(context, LumioLoginActivity.class);
             updateAccountCredentials.putExtra(AuthenticatorActivity.EXTRA_ACCOUNT, account);
             updateAccountCredentials.putExtra(
                 AuthenticatorActivity.EXTRA_ACTION,

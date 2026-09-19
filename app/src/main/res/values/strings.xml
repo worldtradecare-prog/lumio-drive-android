@@ -1639,4 +1639,12 @@
     <string name="player_control_view_next_button_content_description">Next button</string>
     <string name="player_control_view_random_button_content_description">Random button</string>
     <string name="server_not_allowed">Server not allowed</string>
+
+    <!-- Lumio Drive gallery -->
+    <string name="library_by_year">Library by year</string>
+    <string name="library_by_year_photos_videos">%1$d photos · %2$d videos</string>
+    <string name="library_by_year_total_label">Total</string>
+    <string name="library_by_year_folders_caption">Photos + Videos folders</string>
+    <string name="library_by_year_loading">Loading year counts…</string>
+    <string name="library_by_year_error">Could not load year library</string>
 </resources>

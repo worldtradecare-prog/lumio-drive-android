@@ -27,6 +27,7 @@ import android.os.Bundle;
 
 import com.nextcloud.client.account.UserAccountManager;
 import com.owncloud.android.R;
+import com.nextcloud.client.lumio.LumioLoginActivity
 import com.owncloud.android.authentication.AuthenticatorActivity;
 import com.owncloud.android.datamodel.FileDataStorageManager;
 import com.owncloud.android.datamodel.OCFile;
@@ -396,7 +397,7 @@ public class FileSyncAdapter extends AbstractOwnCloudSyncAdapter {
             && ResultCode.UNAUTHORIZED == mLastFailedResult.getCode();
         if (needsToUpdateCredentials) {
             // let the user update credentials with one click
-            Intent updateAccountCredentials = new Intent(getContext(), AuthenticatorActivity.class);
+            Intent updateAccountCredentials = new Intent(getContext(), LumioLoginActivity.class);
             updateAccountCredentials.putExtra(AuthenticatorActivity.EXTRA_ACCOUNT, getAccount());
             updateAccountCredentials.putExtra(AuthenticatorActivity.EXTRA_ACTION,
                     AuthenticatorActivity.ACTION_UPDATE_EXPIRED_TOKEN);

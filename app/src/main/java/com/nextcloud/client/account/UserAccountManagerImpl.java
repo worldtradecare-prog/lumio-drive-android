@@ -25,6 +25,7 @@ import com.nextcloud.utils.extensions.AccountExtensionsKt;
 import com.nmc.android.ui.LauncherActivity;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
+import com.nextcloud.client.lumio.LumioLoginActivity
 import com.owncloud.android.authentication.AuthenticatorActivity;
 import com.owncloud.android.datamodel.ArbitraryDataProvider;
 import com.owncloud.android.datamodel.ArbitraryDataProviderImpl;
@@ -463,7 +464,7 @@ public class UserAccountManagerImpl implements UserAccountManager {
         // skipping AuthenticatorActivity redirection when user is on Launcher or FirstRun Activity
         if (activity instanceof LauncherActivity || activity instanceof FirstRunActivity) return;
 
-        Intent intent = new Intent(context, AuthenticatorActivity.class);
+        Intent intent = new Intent(context, LumioLoginActivity.class);
 
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);

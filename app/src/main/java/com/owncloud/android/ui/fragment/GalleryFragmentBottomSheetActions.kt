@@ -20,4 +20,7 @@ interface GalleryFragmentBottomSheetActions {
      * load all media of a particular folder.
      */
     fun selectMediaFolder()
+
+    /** Open Lumio Drive Library-by-year counts dialog. */
+    fun showLibraryByYear()
 }

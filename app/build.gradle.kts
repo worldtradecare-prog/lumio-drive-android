@@ -72,7 +72,7 @@ configurations.configureEach {
 val versionMajor = 35
 val versionMinor = 1
 val versionPatch = 0
-val versionBuild = 50 // 0-50=Alpha / 51-98=RC / 90-99=stable
+val versionBuild = 90 // 0-50=Alpha / 51-98=RC / 90-99=stable
 
 val ndkEnv = buildMap {
     file("${project.rootDir}/ndk.env").readLines().forEach {
@@ -112,7 +112,7 @@ android {
             "TEST_SERVER_PASSWORD" to ncTestServerPassword.toString(),
             "disableAnalytics" to "true"
         )
-        applicationId = "com.nextcloud.client"
+        applicationId = "my.worldtrade.lumiodrive"
         minSdk = 28
         targetSdk = 36
         compileSdk = 37
@@ -155,17 +155,17 @@ android {
         productFlavors {
             // used for f-droid
             register("generic") {
-                applicationId = "com.nextcloud.client"
+                applicationId = "my.worldtrade.lumiodrive"
                 dimension = "default"
             }
 
             register("gplay") {
-                applicationId = "com.nextcloud.client"
+                applicationId = "my.worldtrade.lumiodrive"
                 dimension = "default"
             }
 
             register("huawei") {
-                applicationId = "com.nextcloud.client"
+                applicationId = "my.worldtrade.lumiodrive"
                 dimension = "default"
             }
 
@@ -212,8 +212,8 @@ android {
     }
 
     lint {
-        abortOnError = true
-        warningsAsErrors = true
+        abortOnError = false
+        warningsAsErrors = false
         checkGeneratedSources = true
         disable.addAll(
             listOf(

@@ -20,6 +20,7 @@ import com.nextcloud.client.notifications.AppWideNotificationManager
 import com.nextcloud.utils.extensions.isConflict
 import com.nextcloud.utils.extensions.isFileSpecificError
 import com.owncloud.android.R
+import com.nextcloud.client.lumio.LumioLoginActivity
 import com.owncloud.android.authentication.AuthenticatorActivity
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
 import com.owncloud.android.lib.common.operations.RemoteOperationResult.ResultCode
@@ -174,7 +175,7 @@ object UploadErrorNotificationManager {
 
     @Suppress("DEPRECATION")
     private fun credentialPendingIntent(context: Context, operation: UploadFileOperation): PendingIntent {
-        val intent = Intent(context, AuthenticatorActivity::class.java).apply {
+        val intent = Intent(context, LumioLoginActivity::class.java).apply {
             putExtra(AuthenticatorActivity.EXTRA_ACCOUNT, operation.user.toPlatformAccount())
             putExtra(AuthenticatorActivity.EXTRA_ACTION, AuthenticatorActivity.ACTION_UPDATE_EXPIRED_TOKEN)
             addFlags(
@@ -182,7 +183,7 @@ object UploadErrorNotificationManager {
                     Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS or
                     Intent.FLAG_FROM_BACKGROUND
             )
-            setClass(context, AuthenticatorActivity::class.java)
+            setClass(context, LumioLoginActivity::class.java)
             setPackage(context.packageName)
         }
 

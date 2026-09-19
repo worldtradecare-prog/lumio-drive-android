@@ -54,6 +54,7 @@ import com.owncloud.android.ui.adapter.GalleryAdapter
 import com.owncloud.android.ui.asynctasks.GallerySearchTask
 import com.owncloud.android.ui.events.ChangeMenuEvent
 import com.owncloud.android.ui.fragment.GalleryFragmentBottomSheetDialog.MediaState
+import com.nextcloud.client.lumio.LumioLibraryByYearDialog
 import com.owncloud.android.ui.fragment.helper.ColumnCount
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -335,6 +336,13 @@ class GalleryFragment :
             putExtra(FolderPickerActivity.EXTRA_ACTION, FolderPickerActivity.CHOOSE_LOCATION)
         }
         folderPickerLauncher.launch(intent)
+    }
+
+    override fun showLibraryByYear() {
+        if (childFragmentManager.findFragmentByTag(LumioLibraryByYearDialog.TAG) != null) {
+            return
+        }
+        LumioLibraryByYearDialog.newInstance().show(childFragmentManager, LumioLibraryByYearDialog.TAG)
     }
 
     private val folderPickerLauncher = registerForActivityResult(

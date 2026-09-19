@@ -127,6 +127,31 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_library_by_year"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="match_parent"
+                    android:gravity="start"
+                    android:layout_height="wrap_content"
+                    app:iconPadding="@dimen/standard_half_padding"
+                    android:text="@string/library_by_year"
+                    android:textSize="@dimen/bottom_sheet_text_size"
+                    app:icon="@drawable/file_calendar" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+
         </LinearLayout>
 
     </FrameLayout>
