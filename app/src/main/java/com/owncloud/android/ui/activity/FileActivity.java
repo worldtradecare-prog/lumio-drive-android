@@ -46,7 +46,7 @@ import com.nextcloud.utils.extensions.IntentExtensionsKt;
 import com.nextcloud.utils.mdm.MDMConfig;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
-import com.nextcloud.client.lumio.LumioLoginActivity
+import com.nextcloud.client.lumio.LumioLoginActivity;
 import com.owncloud.android.authentication.AuthenticatorActivity;
 import com.owncloud.android.datamodel.ArbitraryDataProvider;
 import com.owncloud.android.datamodel.ArbitraryDataProviderImpl;
