@@ -18,31 +18,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,20 +40,16 @@ private val WtmBg = Color(0xFFF5F6FA)
 private val WtmPrimary = Color(0xFF2563EB)
 private val LoginErrorText = Color(0xFFDC2626)
 private val SubtitleGray = Color(0xFF64748B)
-private val BorderGray = Color(0xFFCBD5E1)
 
 @Composable
 fun LumioLoginScreen(
     busy: Boolean,
+    waitingForBrowser: Boolean,
     error: String?,
-    initialUsername: String = "",
-    onSignIn: (username: String, password: String) -> Unit,
+    onSignIn: () -> Unit,
+    onReopenBrowser: () -> Unit,
+    onCancel: () -> Unit,
 ) {
-    var username by remember { mutableStateOf(initialUsername) }
-    var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-    val fieldShape = RoundedCornerShape(12.dp)
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -98,65 +82,16 @@ fun LumioLoginScreen(
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                "Sign in to your files",
+                if (waitingForBrowser) {
+                    "Finish signing in on the secure page, then tap \"Grant access\". " +
+                        "You'll come back here automatically."
+                } else {
+                    "Sign in on Lumio Drive's secure page with your password and authenticator code."
+                },
                 color = SubtitleGray,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
                 lineHeight = 20.sp,
-            )
-            Spacer(Modifier.height(28.dp))
-
-            OutlinedTextField(
-                value = username,
-                onValueChange = { username = it },
-                label = { Text("Username") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                enabled = !busy,
-                shape = fieldShape,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Next,
-                ),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = WtmPrimary,
-                    unfocusedBorderColor = BorderGray,
-                ),
-            )
-            Spacer(Modifier.height(12.dp))
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Password") },
-                trailingIcon = {
-                    TextButton(onClick = { passwordVisible = !passwordVisible }) {
-                        Text(
-                            if (passwordVisible) "Hide" else "Show",
-                            color = SubtitleGray,
-                            fontSize = 12.sp,
-                        )
-                    }
-                },
-                visualTransformation = if (passwordVisible) {
-                    VisualTransformation.None
-                } else {
-                    PasswordVisualTransformation()
-                },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                enabled = !busy,
-                shape = fieldShape,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done,
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = { onSignIn(username, password) },
-                ),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = WtmPrimary,
-                    unfocusedBorderColor = BorderGray,
-                ),
             )
 
             error?.takeIf { it.isNotBlank() }?.let { msg ->
@@ -164,10 +99,10 @@ fun LumioLoginScreen(
                 Text(msg, color = LoginErrorText, textAlign = TextAlign.Center, fontSize = 13.sp)
             }
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(24.dp))
             Button(
-                onClick = { onSignIn(username, password) },
-                enabled = !busy && username.isNotBlank() && password.length >= 4,
+                onClick = if (waitingForBrowser) onReopenBrowser else onSignIn,
+                enabled = waitingForBrowser || !busy,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -178,14 +113,21 @@ fun LumioLoginScreen(
                     disabledContainerColor = WtmPrimary.copy(alpha = 0.35f),
                 ),
             ) {
-                if (busy) {
-                    CircularProgressIndicator(
+                when {
+                    waitingForBrowser -> Text("Open sign-in page again", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                    busy -> CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
                         strokeWidth = 2.dp,
                         color = Color.White,
                     )
-                } else {
-                    Text("Sign In", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                    else -> Text("Sign In", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                }
+            }
+
+            if (waitingForBrowser) {
+                Spacer(Modifier.height(8.dp))
+                TextButton(onClick = onCancel) {
+                    Text("Cancel", color = SubtitleGray, fontSize = 14.sp)
                 }
             }
         }
