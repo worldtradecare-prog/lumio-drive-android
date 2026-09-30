@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.sp
 import com.owncloud.android.R
 
 private val WtmBg = Color(0xFFF5F6FA)
-private val WtmPrimary = Color(0xFF327CF1)
+private val WtmPrimary = Color(0xFF2563EB)
 private val LoginErrorText = Color(0xFFDC2626)
 private val SubtitleGray = Color(0xFF64748B)
 private val BorderGray = Color(0xFFCBD5E1)
@@ -85,8 +85,8 @@ fun LumioLoginScreen(
                 painter = painterResource(R.drawable.lumio_side_logo),
                 contentDescription = "Lumio Drive",
                 modifier = Modifier
-                    .fillMaxWidth(0.85f)
-                    .height(56.dp),
+                    .fillMaxWidth(0.92f)
+                    .height(72.dp),
                 contentScale = ContentScale.Fit,
             )
             Spacer(Modifier.height(20.dp))

@@ -11,16 +11,17 @@ import android.widget.ImageView
 import com.nextcloud.utils.extensions.getSmallThumbnail
 import com.owncloud.android.R
 import com.owncloud.android.datamodel.ThumbnailsCacheManager
-import com.owncloud.android.datamodel.ThumbnailsCacheManager.AsyncThumbnailDrawable
-import com.owncloud.android.datamodel.ThumbnailsCacheManager.ThumbnailGenerationTask
-import com.owncloud.android.datamodel.ThumbnailsCacheManager.ThumbnailGenerationTaskObject
+import com.owncloud.android.datamodel.ThumbnailsCacheManager.AsyncMediaThumbnailDrawable
+import com.owncloud.android.datamodel.ThumbnailsCacheManager.MediaThumbnailGenerationTask
 import com.owncloud.android.lib.common.utils.Log_OC
 import com.owncloud.android.utils.MimeTypeUtil
 import com.owncloud.android.utils.theme.ViewThemeUtils
 import java.io.File
+import java.util.concurrent.Executors
 
 object LocalFileThumbnailBinder {
     private val TAG: String = LocalFileThumbnailBinder::class.java.simpleName
+    private val thumbnailExecutor = Executors.newCachedThreadPool()
 
     fun setThumbnail(file: File, thumbnailView: ImageView, context: Context, viewThemeUtils: ViewThemeUtils) {
         if (file.isDirectory) {
@@ -28,45 +29,31 @@ object LocalFileThumbnailBinder {
             return
         }
 
-        thumbnailView.setImageResource(R.drawable.file)
+        thumbnailView.tag = file.hashCode()
 
-        // Cancellation needs to be checked and done before changing the drawable in fileIcon, or
-        // ThumbnailsCacheManager#cancelPotentialThumbnailWork will NEVER cancel any task.
-        val allowedToCreateNewThumbnail = ThumbnailsCacheManager.cancelPotentialThumbnailWork(file, thumbnailView)
+        // Images and videos: show a real frame/thumbnail at a glance in the upload picker.
+        if (MimeTypeUtil.isImage(file) || MimeTypeUtil.isVideo(file)) {
+            val cachedThumbnail = file.getSmallThumbnail()
+            if (cachedThumbnail != null) {
+                thumbnailView.setImageBitmap(cachedThumbnail)
+                return
+            }
 
-        if (!MimeTypeUtil.isImage(file)) {
-            thumbnailView.setImageDrawable(MimeTypeUtil.getFileTypeIcon(null, file.name, context, viewThemeUtils))
+            val placeholder = if (MimeTypeUtil.isVideo(file)) {
+                ThumbnailsCacheManager.mDefaultVideo
+            } else {
+                ThumbnailsCacheManager.mDefaultImg
+            }
+            thumbnailView.setImageDrawable(AsyncMediaThumbnailDrawable(context.resources, placeholder))
+
+            val task = MediaThumbnailGenerationTask(thumbnailView, context, viewThemeUtils)
+            task.executeOnExecutor(thumbnailExecutor, file)
+            Log_OC.v(TAG, "Executing media thumbnail task for ${file.name}")
             return
         }
 
-        setImageThumbnail(file, thumbnailView, context, allowedToCreateNewThumbnail)
-    }
-
-    private fun setImageThumbnail(
-        file: File,
-        thumbnailView: ImageView,
-        context: Context,
-        allowedToCreateNewThumbnail: Boolean
-    ) {
-        val cachedThumbnail = file.getSmallThumbnail()
-        when {
-            cachedThumbnail != null -> thumbnailView.setImageBitmap(cachedThumbnail)
-
-            // when a thumbnail is already being generated, don't restart it
-            allowedToCreateNewThumbnail -> generateThumbnail(file, thumbnailView, context)
-        }
-    }
-
-    private fun generateThumbnail(file: File, thumbnailView: ImageView, context: Context) {
-        val task = ThumbnailGenerationTask(thumbnailView)
-        val placeholder = if (MimeTypeUtil.isVideo(file)) {
-            ThumbnailsCacheManager.mDefaultVideo
-        } else {
-            ThumbnailsCacheManager.mDefaultImg
-        }
-
-        thumbnailView.setImageDrawable(AsyncThumbnailDrawable(context.resources, placeholder, task))
-        task.execute(ThumbnailGenerationTaskObject(file, null))
-        Log_OC.v(TAG, "Executing task to generate a new thumbnail")
+        thumbnailView.setImageDrawable(
+            MimeTypeUtil.getFileTypeIcon(null, file.name, context, viewThemeUtils)
+        )
     }
 }

@@ -7,12 +7,14 @@
 package com.owncloud.android.ui.adapter.localFileList
 
 import android.app.Activity
+import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.nextcloud.android.common.ui.theme.utils.ColorRole
 import com.owncloud.android.R
 import com.owncloud.android.ui.interfaces.LocalFileListFragmentInterface
 import com.owncloud.android.utils.DisplayUtils
+import com.owncloud.android.utils.MimeTypeUtil
 import com.owncloud.android.utils.theme.ViewThemeUtils
 import java.io.File
 
@@ -28,14 +30,40 @@ internal class LocalFileListItemBinder(
     fun bind(holder: LocalFileListGridItemViewHolder, file: File) {
         bindSelection(holder, file)
         bindThumbnail(holder, file)
-
-        holder.itemLayout.setOnClickListener { fragmentInterface.onItemClicked(file) }
+        bindClickAndHoldPreview(holder, file)
 
         if (holder is LocalFileListItemViewHolder) {
             bindFileDetails(holder, file)
         }
 
         holder.fileName.text = file.name
+    }
+
+    private fun bindClickAndHoldPreview(holder: LocalFileListGridItemViewHolder, file: File) {
+        holder.itemLayout.setOnClickListener { fragmentInterface.onItemClicked(file) }
+
+        // Press-and-hold: play video while finger is down; release closes it.
+        if (!localFolderPickerMode && MimeTypeUtil.isVideo(file)) {
+            holder.itemLayout.setOnLongClickListener {
+                holder.itemLayout.parent?.requestDisallowInterceptTouchEvent(true)
+                LocalVideoHoldPreview.show(activity, file)
+                true
+            }
+            holder.itemLayout.setOnTouchListener { v, event ->
+                when (event.actionMasked) {
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                        if (LocalVideoHoldPreview.isShowing()) {
+                            LocalVideoHoldPreview.dismiss()
+                        }
+                        v.parent?.requestDisallowInterceptTouchEvent(false)
+                    }
+                }
+                false
+            }
+        } else {
+            holder.itemLayout.setOnLongClickListener(null)
+            holder.itemLayout.setOnTouchListener(null)
+        }
     }
 
     private fun bindSelection(holder: LocalFileListGridItemViewHolder, file: File) {

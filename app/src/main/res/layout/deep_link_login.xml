@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@null"
             android:layout_marginBottom="@dimen/standard_margin"
-            android:src="@drawable/logo" />
+            android:src="@drawable/lumio_side_logo" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/loginInfo"

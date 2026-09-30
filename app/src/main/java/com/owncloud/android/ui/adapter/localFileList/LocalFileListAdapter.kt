@@ -163,7 +163,7 @@ class LocalFileListAdapter(
             VIEW_TYPE_ITEM, VIEW_TYPE_IMAGE -> if (gridView) {
                 LocalFileListGridItemViewHolder(inflater.inflate(R.layout.grid_item, parent, false))
             } else {
-                LocalFileListItemViewHolder(inflater.inflate(R.layout.list_item, parent, false))
+                LocalFileListItemViewHolder(inflater.inflate(R.layout.local_file_list_item, parent, false))
             }
 
             VIEW_TYPE_FOOTER -> LocalFileListFooterViewHolder(inflater.inflate(R.layout.list_footer, parent, false))

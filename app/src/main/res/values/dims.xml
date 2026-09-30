@@ -20,6 +20,9 @@
     <dimen name="bottom_sheet_horizontal_item_height">96dp</dimen>
     <dimen name="bottom_sheet_menu_item_divider_standard_margin">56dp</dimen>
     <dimen name="file_icon_size">40dp</dimen>
+    <!-- Larger thumbs in Upload files picker so videos are clear while scrolling -->
+    <dimen name="local_upload_thumb_size">112dp</dimen>
+    <dimen name="local_upload_row_size">128dp</dimen>
     <dimen name="live_photo_indicator_margin">100dp</dimen>
     <dimen name="file_icon_size_grid">128dp</dimen>
     <dimen name="file_icon_rounded_corner_radius">8dp</dimen>

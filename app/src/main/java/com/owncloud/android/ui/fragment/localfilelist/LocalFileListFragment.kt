@@ -24,6 +24,7 @@ import com.nextcloud.client.di.Injectable
 import com.owncloud.android.R
 import com.owncloud.android.lib.common.utils.Log_OC
 import com.owncloud.android.ui.adapter.localFileList.LocalFileListAdapter
+import com.owncloud.android.ui.adapter.localFileList.LocalVideoHoldPreview
 import com.owncloud.android.ui.fragment.EmptyListState
 import com.owncloud.android.ui.fragment.ExtendedListFragment
 import com.owncloud.android.ui.interfaces.LocalFileListFragmentInterface
@@ -89,6 +90,7 @@ class LocalFileListFragment :
     }
 
     override fun onDestroyView() {
+        LocalVideoHoldPreview.dismiss()
         adapter.cleanup()
         super.onDestroyView()
     }
@@ -144,6 +146,7 @@ class LocalFileListFragment :
             return
         }
 
+        // Short tap selects for upload. Videos: long-press to play, release to close.
         onItemCheckboxClicked(file)
     }
 
